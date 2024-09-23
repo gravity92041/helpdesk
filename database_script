@@ -18,6 +18,6 @@ create table ticket
     category    varchar,
     title       varchar,
     responsible int,
-    author      int,
+    author      int references person(id) on delete set null ,
     status      varchar
 )
