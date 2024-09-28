@@ -1,4 +1,3 @@
-PeopleService.java
 HELP.md
 **/src/main/**
 target/
@@ -33,3 +32,4 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/java/com/brytvich/helpdesk/services/PeopleService.java
