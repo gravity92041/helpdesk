@@ -1,4 +1,6 @@
+PeopleService.java
 HELP.md
+**/src/main/**
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -31,4 +33,3 @@ build/
 
 ### VS Code ###
 .vscode/
-PeopleService.java
