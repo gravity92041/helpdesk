@@ -18,4 +18,4 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-jwt-secret: aa8a1eda05ed6c1d85fa895fab690c8ee9da6146d896560a31944dccc60a0f78e9bdd0d6ae22e7d117ab04c3c7b4429df71fb6a803bc88ee7decf2cdc34cfda2
+jwt_secret: aa8a1eda05ed6c1d85fa895fab690c8ee9da6146d896560a31944dccc60a0f78e9bdd0d6ae22e7d117ab04c3c7b4429df71fb6a803bc88ee7decf2cdc34cfda2
