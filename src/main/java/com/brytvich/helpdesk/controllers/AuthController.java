@@ -1,11 +1,15 @@
 package com.brytvich.helpdesk.controllers;
 
+import com.brytvich.helpdesk.dto.AuthDTO;
+import com.brytvich.helpdesk.dto.PersonDTO;
 import com.brytvich.helpdesk.models.Person;
 import com.brytvich.helpdesk.security.JWTUtil;
 import com.brytvich.helpdesk.security.PersonDetails;
+import com.brytvich.helpdesk.services.PersonDetailsService;
 import com.brytvich.helpdesk.services.RegistrationService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +31,7 @@ public class AuthController {
     private final JWTUtil jwtUtil;
 
     private final ModelMapper mapper;
-
+    @Autowired
     public AuthController(RegistrationService registrationService, AuthenticationManager authenticationManager, JWTUtil jwtUtil, ModelMapper mapper, PersonDetailsService personDetailsService) {
         this.registrationService = registrationService;
         this.authenticationManager = authenticationManager;
@@ -62,7 +66,7 @@ public class AuthController {
             return Map.of("message","Incorrect credentials");
         }
         Person person = personDetailsService.findPersonByUsername(authDTO.getUsername());
-        String token = jwtUtil.generateTokenWithRole(authDTO.getUsername,person.getRole());
+        String token = jwtUtil.generateTokenWithRole(person.getUsername(),person.getRole());
         return Map.of("jwt-token",token);
     }
 
