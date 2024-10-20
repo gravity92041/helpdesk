@@ -1,6 +1,6 @@
 spring:
   application:
-    name=helpdesk
+    name: helpdesk
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/helpdesk
@@ -13,9 +13,11 @@ spring:
         type:
           descriptor:
             sql: trace
-        show_sql: true
+    show_sql: true
   mvc:
     hiddenmethod:
       filter:
         enabled: true
+server:
+  port: 8080
 jwt_secret: aa8a1eda05ed6c1d85fa895fab690c8ee9da6146d896560a31944dccc60a0f78e9bdd0d6ae22e7d117ab04c3c7b4429df71fb6a803bc88ee7decf2cdc34cfda2

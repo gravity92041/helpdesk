@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PersonDTO {
+public class UserDTO {
     @NotEmpty(message = "Имя пользователя не должно быть пустым")
     @Size(min = 2,max = 30,message = "Имя должно быть")
     @Column(name = "username")
@@ -20,6 +20,6 @@ public class PersonDTO {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "birthyear")
-    private int birthYear;
+    @Column(name = "email")
+    private String email;
 }

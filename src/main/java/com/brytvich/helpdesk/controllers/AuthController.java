@@ -1,13 +1,13 @@
 package com.brytvich.helpdesk.controllers;
 
 import com.brytvich.helpdesk.dto.AuthDTO;
-import com.brytvich.helpdesk.dto.PersonDTO;
-import com.brytvich.helpdesk.models.Person;
+import com.brytvich.helpdesk.dto.UserDTO;
+import com.brytvich.helpdesk.models.User;
 import com.brytvich.helpdesk.security.JWTUtil;
-import com.brytvich.helpdesk.security.PersonDetails;
-import com.brytvich.helpdesk.services.PersonDetailsService;
+import com.brytvich.helpdesk.services.CustomUserDetailsService;
 import com.brytvich.helpdesk.services.RegistrationService;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +24,7 @@ import java.util.Map;
 public class AuthController {
     private final RegistrationService registrationService;
 
-    private final PersonDetailsService personDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     private final AuthenticationManager authenticationManager;
 
@@ -32,12 +32,13 @@ public class AuthController {
 
     private final ModelMapper mapper;
     @Autowired
-    public AuthController(RegistrationService registrationService, AuthenticationManager authenticationManager, JWTUtil jwtUtil, ModelMapper mapper, PersonDetailsService personDetailsService) {
+    public AuthController(RegistrationService registrationService, AuthenticationManager authenticationManager, JWTUtil jwtUtil, ModelMapper mapper,
+                          CustomUserDetailsService customUserDetailsService) {
         this.registrationService = registrationService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.mapper = mapper;
-        this.personDetailsService = personDetailsService;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
 //    @GetMapping("/login")
@@ -45,16 +46,16 @@ public class AuthController {
 
     //ПЕРЕПИСАТЬ МЕТОДЫ ПОД HTTPENTITY
     @PostMapping("/registration")
-    public Map<String,String> performRegistration (@RequestBody @Valid PersonDTO personDTO,
+    public Map<String,String> performRegistration (@RequestBody @Valid UserDTO userDTO,
                                                    BindingResult bindingResult){
-        Person person = convertToPerson(personDTO);
+        User user = convertToUser(userDTO);
 
         if (bindingResult.hasErrors()){
             return Map.of("message","error");
         }
-        registrationService.register(person);
-        String token  = jwtUtil.generateToken(person.getUsername());
-        return Map.of("jwt-token",token);
+        registrationService.register(user);
+//        String token  = jwtUtil.generateToken(user.getUsername());
+        return Map.of("registration","Success");
     }
     @PostMapping("/login")
     public Map<String,String> performLogin(@RequestBody AuthDTO authDTO){
@@ -65,12 +66,17 @@ public class AuthController {
         }catch (BadCredentialsException e){
             return Map.of("message","Incorrect credentials");
         }
-        Person person = personDetailsService.findPersonByUsername(authDTO.getUsername());
-        String token = jwtUtil.generateTokenWithRole(person.getUsername(),person.getRole());
+        User user = customUserDetailsService.findUserByUsername(authDTO.getUsername());
+        String token = jwtUtil.generateTokenWithRole(user.getUsername(),user.getRole().getName());
         return Map.of("jwt-token",token);
     }
 
-    public Person convertToPerson(PersonDTO personDTO){
-        return mapper.map(personDTO,Person.class);
+    @GetMapping("/sigma")
+    public Map<String,String> sigma(){
+        return Map.of("I simga","SIGMA");
+    }
+
+    public User convertToUser(UserDTO userDTO){
+        return mapper.map(userDTO,User.class);
     }
 }

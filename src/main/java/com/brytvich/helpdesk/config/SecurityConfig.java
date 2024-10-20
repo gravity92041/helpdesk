@@ -12,46 +12,55 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.brytvich.helpdesk.util.myAccessDeniedHandler;
 
 @EnableWebSecurity
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
     private final JWTFilter jwtFilter;
+    private final myAccessDeniedHandler myAccessDeniedHandler;
 
-
-    public SecurityConfig(JWTFilter jwtFilter) {
+    public SecurityConfig(JWTFilter jwtFilter, com.brytvich.helpdesk.util.myAccessDeniedHandler myAccessDeniedHandler) {
         this.jwtFilter = jwtFilter;
+
+        this.myAccessDeniedHandler = myAccessDeniedHandler;
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(requests->requests
-                        .requestMatchers("/auth/login","/auth/registration","/monkey/**").permitAll()
+                        .requestMatchers("/v1/api/auth/login","/swagger-ui/swagger-config"
+                                ,"/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN","MAIN")
                         .anyRequest().hasAnyRole("USER","ADMIN")
                 )
-
-                .formLogin(form->form
-//                                .loginPage("http://localhost:63343/front/LoginPage.html")
-                                .loginPage("/auth/login")
-                                .defaultSuccessUrl("/monkey",true)
-                                .failureUrl("/auth/login?error")
-                )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf(csrf->csrf.disable())
+//                .formLogin(form->form
+////                                .loginPage("http://localhost:63343/front/LoginPage.html")
+//                                .loginPage("/auth/login")
+//                                .defaultSuccessUrl("/monkey",true)
+//                                .failureUrl("/auth/login?error")
+//                )
                 .logout(logout->logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/auth/login")
                 )
-//                .exceptionHandling(exception->exception.accessDeniedHandler(myAccessDeniedHandler))
+                .exceptionHandling(exception->exception.accessDeniedHandler(myAccessDeniedHandler))
                 .sessionManagement(sessionManagement->sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-
         return http.build();
     }
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+//        http
+//                .authorizeHttpRequests(requests->requests
+//                        .requestMatchers("/v1/api/auth/sigma","/sigma").permitAll())
+//                .csrf(csrf->csrf.disable());
+//        return http.build();
+//    }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

@@ -1,5 +1,6 @@
 package com.brytvich.helpdesk.dto;
 
+import com.brytvich.helpdesk.models.Category;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,7 @@ public class TicketDTO {
     private String description;
 
     @Column(name = "category")
-    private String category;
+    private Category category;
 
     @Column(name = "title")
     private String title;

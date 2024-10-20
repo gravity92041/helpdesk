@@ -15,5 +15,5 @@ public class AuthDTO {
     @NotEmpty
     private String password;
 
-    private int birthYear;
+    private int email;
 }
