@@ -15,5 +15,4 @@ public class AuthDTO {
     @NotEmpty
     private String password;
 
-    private int email;
 }

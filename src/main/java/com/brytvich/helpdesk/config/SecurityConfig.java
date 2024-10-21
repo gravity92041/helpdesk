@@ -30,8 +30,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
                 .authorizeHttpRequests(requests->requests
-                        .requestMatchers("/v1/api/auth/login","/swagger-ui/swagger-config"
-                                ,"/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
+                        .requestMatchers("/v1/api/auth/registration"
+                                ,"/v1/api/auth/login"
+                                ,"/swagger-ui/swagger-config"
+                                ,"/v3/api-docs/**"
+                                ,"/swagger-ui/**"
+                                ,"/swagger-ui.html")
+                        .permitAll()
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN","MAIN")
                         .anyRequest().hasAnyRole("USER","ADMIN")
                 )
